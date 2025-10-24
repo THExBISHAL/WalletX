@@ -1,0 +1,137 @@
+import { useState } from "react";
+import { API } from "@/Service/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+function SignUp() {
+  const initialSignupState = {
+    name: "",
+    email: "",
+    password: "",
+  };
+  const [signupData, setSignupData] = useState(initialSignupState);
+  const navigate = useNavigate();
+
+  const onInputChange = (e) => {
+    setSignupData({
+      ...signupData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const signupUser = async () => {
+    console.log(signupData);
+
+    let response = await API.userSignup(signupData);
+    console.log(response);
+    if (response?.isSuccess) {
+      toast(response.data.message);
+      setSignupData(initialSignupState);
+      navigate("/login");
+    } else {
+      toast(response.message);
+    }
+  };
+
+  return (
+    <>
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 to-violet-900">
+        <div className="flex shadow-2xl rounded-lg overflow-hidden w-full mx-10 sm:mx-20 bg-gradient-to-br from-gray-700 to-violet-700 p-5">
+          {/* Left Panel (Image + Branding) */}
+          <div className="hidden lg:flex flex-1 rounded-lg bg-violet-900 flex-col justify-evenly p-6">
+            <div className="flex justify-start items-center space-x-2">
+              <span className="text-slate-100 text-3xl font-serif font-semibold">
+                WalletX
+              </span>
+            </div>
+            <div className="flex-grow flex flex-col justify-end mt-2">
+              <img
+                src="https://wpblogassets.paytm.com/paytmblog/uploads/2022/03/HowTo_8_Transfer-money-from-Paytm-Wallet-to-Bank-Account.jpg"
+                alt="Desert"
+                className="object-cover w-full h-80 rounded-xl"
+              />
+              <span className="mt-4 text-slate-100 text-lg font-sarif">
+                Pay Smarter,
+                <br />
+                Live Better
+              </span>
+            </div>
+          </div>
+
+          {/* Right Panel (Form) */}
+          <div className="flex-1 flex flex-col justify-center md:px-6">
+            <div className="h-full py-6 flex flex-col justify-around lg:gap-0 gap-12">
+              <div>
+                <h2 className="text-slate-100 text-2xl sm:text-3xl font-bold mb-2">
+                  Create an account
+                </h2>
+                <span className="text-gray-400 text-sm">
+                  Already have an account?{" "}
+                  <a href="/login" className="underline hover:text-blue-600">
+                    Log in
+                  </a>
+                </span>
+              </div>
+              <div>
+                <form className="flex flex-col gap-3 w-full">
+                  <div className="flex flex-col sm:flex-row gap-2 mb-3">
+                    <input
+                      type="text"
+                      name="name"
+                      onChange={(e) => {
+                        onInputChange(e);
+                      }}
+                      required
+                      placeholder="Username"
+                      className="flex-1 px-4 py-2 rounded bg-violet-950 text-white"
+                    />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    onChange={(e) => {
+                      onInputChange(e);
+                    }}
+                    required
+                    placeholder="Email"
+                    className="px-4 py-2 rounded bg-violet-950 text-white mb-2"
+                  />
+                  <input
+                    type="password"
+                    name="password"
+                    onChange={(e) => {
+                      onInputChange(e);
+                    }}
+                    required
+                    placeholder="Enter your password"
+                    className="px-4 py-2 rounded bg-violet-950 text-white mb-2"
+                  />
+                  <label className="flex items-center text-violet-950 text-xs mb-4">
+                    <input type="checkbox" className="w-3 h-3 mr-2" />I agree to
+                    the{" "}
+                    <a href="#" className="underline text-white ml-1">
+                      Terms & Conditions
+                    </a>
+                  </label>
+                </form>
+                <div className="flex justify-center items-center">
+                  <button
+                    type="submit"
+                    onClick={() => {
+                      signupUser();
+                    }}
+                    className="mx-auto w-70 h-12 py-2 rounded-xl bg-violet-950 text-gray-300 font-semibold mb-4 hover:scale-102 duration-200"
+                  >
+                    Log in
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default SignUp;
