@@ -14,12 +14,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DataContext } from "@/context/DataProvider";
 import { NavLink } from "react-router-dom"; // ✅ use NavLink instead of <a>
+import { API } from "@/Service/api";
 
 function Navbar() {
+  const initialValue = {
+    balance: "",
+    id: "",
+    isActive: false,
+    userId: "",
+  };
+
   const { account } = useContext(DataContext);
+  const [wallet, setWallet] = useState(initialValue);
 
   const navItems = [
     { name: "Dashboard", path: "/" },
@@ -27,6 +36,19 @@ function Navbar() {
     { name: "Transactions", path: "/history" },
     { name: "About Us", path: "/aboutus" },
   ];
+
+  useEffect(() => {
+    const createWallet = async () => {
+      const response = await API.createWallet({ userId: account.userId });
+      console.log(response);
+
+      setWallet(response.data);
+      if (response?.isSuccess) {
+        console.log("OK");
+      }
+    };
+    createWallet();
+  }, []);
 
   return (
     <div className="flex justify-between items-center px-8 py-4 bg-blue-950 text-gray-200 shadow-lg">

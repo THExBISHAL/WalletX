@@ -34,7 +34,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-/////////////////////////////
 const processResponse = (response) => {
   if (response?.status === 200 || response?.status === 201) {
     return { isSuccess: true, data: response.data };
@@ -73,7 +72,7 @@ const processError = (error) => {
 const API = {};
 
 for (const [key, value] of Object.entries(SERVICE_URLS)) {
-  API[key] = (body, showUploadProgress, showDownloadProgress) => {
+  API[key] = (body, showUploadProgress, showDownloadProgress, customUrl) => {
     const isFormData = body instanceof FormData;
     const header = {
       Authorization: getAccessToken(),
@@ -82,7 +81,7 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
 
     return axiosInstance({
       method: value.method,
-      url: value.url,
+      url: customUrl || value.url,
       data: value.method === "DELETE" ? {} : body,
       responseType: value.responseType,
       headers: header,
@@ -107,6 +106,7 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
   };
 }
 
+export { API };
 API.addMoney = (userId, body) => {
   const token = getAccessToken();
   return axiosInstance({
@@ -119,5 +119,3 @@ API.addMoney = (userId, body) => {
     },
   });
 };
-
-export { API };

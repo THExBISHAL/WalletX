@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { API } from "@/Service/api";
+import { DataContext } from "@/context/DataProvider";
 
 function Top({ wallet }) {
   const [data, setData] = useState([{ data: [] }]);
   const [add, setAdd] = useState(0);
+  const { account } = useContext(DataContext);
 
+  const url = `/wallets/${account.userId}/credit`;
   const maskWalletId = (id) => {
     if (!id) return "";
     const strId = id.toString();
@@ -27,16 +28,15 @@ function Top({ wallet }) {
 
   const addMoney = async () => {
     console.log("AddMoney clicked");
+    console.log(add);
 
-    const response = await API.addMoney(wallet.userId, { amount: Number(add) });
-    console.log(response);
-    if (response?.isSuccess) {
+    const response = await API.addMoney({ amount: add }, null, null, url);
+    console.log("Response:", response);
+    if (response) {
       console.log("OK");
+    } else {
+      console.log("Failed:", response);
     }
-  };
-
-  const onValueChange = (e) => {
-    setAdd(e.target.value);
   };
 
   //Fetch News
@@ -98,9 +98,7 @@ function Top({ wallet }) {
                       type="Number"
                       name="addMoney"
                       placeholder="Enter amount to add"
-                      onChange={(e) => {
-                        onValueChange(e);
-                      }}
+                      onChange={(e) => setAdd(e.target.value)}
                     />
                   </div>
                 </div>
