@@ -20,10 +20,7 @@ function SignUp() {
   };
 
   const signupUser = async () => {
-    console.log(signupData);
-
     let response = await API.userSignup(signupData);
-    console.log(response);
     if (response?.isSuccess) {
       toast(response.data.message);
       setSignupData(initialSignupState);

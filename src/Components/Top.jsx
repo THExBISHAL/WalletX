@@ -13,12 +13,22 @@ import { Input } from "@/components/ui/input";
 import { API } from "@/Service/api";
 import { DataContext } from "@/context/DataProvider";
 
-function Top({ wallet }) {
-  const [data, setData] = useState([{ data: [] }]);
+function Top() {
+  const initialValue = {
+    balance: "",
+    id: "",
+    isActive: false,
+    userId: "",
+  };
+
+  const [data, setData] = useState([{ data: [] }]); //NEWS data
   const [add, setAdd] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [balance, setBalance] = useState(0);
+  const [wallet, setWallet] = useState(initialValue);
   const { account } = useContext(DataContext);
 
-  const url = `/wallets/${account.userId}/credit`;
+  const addMoneyURL = `/wallets/${account.userId}/credit`;
   const maskWalletId = (id) => {
     if (!id) return "";
     const strId = id.toString();
@@ -26,16 +36,33 @@ function Top({ wallet }) {
     return masked.replace(/(.{7})/g, "$1 ");
   };
 
-  const addMoney = async () => {
-    console.log("AddMoney clicked");
-    console.log(add);
+  useEffect(() => {
+    const createWallet = async () => {
+      const response = await API.createWallet({ userId: account.userId });
+      if (response?.isSuccess) {
+        setWallet(response.data);
+        setBalance(response.data.balance);
+        setIsDialogOpen(false);
+      }
+    };
+    createWallet();
+  }, []);
 
-    const response = await API.addMoney({ amount: add }, null, null, url);
-    console.log("Response:", response);
-    if (response) {
-      console.log("OK");
-    } else {
-      console.log("Failed:", response);
+  const addMoney = async (e) => {
+    try {
+      const response = await API.addMoney(
+        { amount: add },
+        null,
+        null,
+        addMoneyURL
+      );
+      if (response?.isSuccess) {
+        setBalance((prev) => prev + add);
+      } else {
+        console.log("Failed:", response);
+      }
+    } catch (err) {
+      console.error("Error adding money:", err);
     }
   };
 
@@ -75,10 +102,8 @@ function Top({ wallet }) {
         <div className="flex flex-col gap-3">
           <h3 className="font-bold text-xl  text-gray-800">Wallet</h3>
           <p className="text-md font-medium mt-2">{maskWalletId(wallet.id)}</p>
-          <p className="text-2xl lg:text-2xl font-bold mt-1">
-            ₹{wallet.balance}
-          </p>
-          <Dialog>
+          <p className="text-2xl lg:text-2xl font-bold mt-1">₹{balance}</p>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <form>
               <DialogTrigger asChild>
                 <Button
@@ -98,7 +123,7 @@ function Top({ wallet }) {
                       type="Number"
                       name="addMoney"
                       placeholder="Enter amount to add"
-                      onChange={(e) => setAdd(e.target.value)}
+                      onChange={(e) => setAdd(parseFloat(e.target.value))}
                     />
                   </div>
                 </div>
@@ -107,7 +132,13 @@ function Top({ wallet }) {
                     <Button variant="outline">Cancel</Button>
                   </DialogClose>
                   <DialogClose asChild>
-                    <Button variant="outline" type="submit" onClick={addMoney}>
+                    <Button
+                      variant="outline"
+                      onClick={async () => {
+                        await addMoney(); // call your function
+                        setIsDialogOpen(false); // manually close dialog
+                      }}
+                    >
                       Add
                     </Button>
                   </DialogClose>

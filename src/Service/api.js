@@ -107,15 +107,3 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
 }
 
 export { API };
-API.addMoney = (userId, body) => {
-  const token = getAccessToken();
-  return axiosInstance({
-    method: "POST",
-    url: `/wallets/${userId}/credit`,
-    data: body,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token,
-    },
-  });
-};

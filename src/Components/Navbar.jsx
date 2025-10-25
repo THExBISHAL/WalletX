@@ -16,7 +16,7 @@ import {
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useContext, useEffect, useState } from "react";
 import { DataContext } from "@/context/DataProvider";
-import { NavLink } from "react-router-dom"; // ✅ use NavLink instead of <a>
+import { NavLink } from "react-router-dom";
 import { API } from "@/Service/api";
 
 function Navbar() {
@@ -27,28 +27,12 @@ function Navbar() {
     userId: "",
   };
 
-  const { account } = useContext(DataContext);
-  const [wallet, setWallet] = useState(initialValue);
-
   const navItems = [
     { name: "Dashboard", path: "/" },
     { name: "Wallet", path: "/wallet" },
     { name: "Transactions", path: "/history" },
     { name: "About Us", path: "/aboutus" },
   ];
-
-  useEffect(() => {
-    const createWallet = async () => {
-      const response = await API.createWallet({ userId: account.userId });
-      console.log(response);
-
-      setWallet(response.data);
-      if (response?.isSuccess) {
-        console.log("OK");
-      }
-    };
-    createWallet();
-  }, []);
 
   return (
     <div className="flex justify-between items-center px-8 py-4 bg-blue-950 text-gray-200 shadow-lg">
@@ -81,9 +65,7 @@ function Navbar() {
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-blue-900 w-40 h-35 text-gray-100 border border-black flex flex-col justify-around items-center">
-            <DropdownMenuLabel>
-              {account?.name || "THExBISHAL"}
-            </DropdownMenuLabel>
+            <DropdownMenuLabel>{"THExBISHAL"}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <div className="flex flex-col justify-between gap-3 pb-2 font-medium">
               <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -91,7 +73,7 @@ function Navbar() {
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
-        <span className="font-mono">{account?.name || "THExBISHAL"}</span>
+        <span className="font-mono">{"THExBISHAL"}</span>
       </div>
 
       {/* -------- Mobile Menu -------- */}
@@ -109,7 +91,7 @@ function Navbar() {
                     className="w-10 h-10 rounded-full"
                   />
                   <span className="text-gray-100 font-medium">
-                    {account?.name || "THExBISHAL"}
+                    {"THExBISHAL"}
                   </span>
                 </div>
               </SheetTitle>

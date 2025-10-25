@@ -62,7 +62,6 @@ function SendMoney() {
   const chatEndRef = useRef(null);
 
   const handleSend = () => {
-    console.log(amount);
     if (!amount) return;
     setTransactions([
       ...transactions,

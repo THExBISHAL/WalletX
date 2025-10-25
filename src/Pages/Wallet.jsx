@@ -1,44 +1,48 @@
 import Navbar from "@/Components/Navbar";
-import { useState } from "react";
+import { DataContext } from "@/context/DataProvider";
+import { API } from "@/Service/api";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Wallet() {
-  const [search, setSearch] = useState();
+  const { account } = useContext(DataContext);
+  const initialValue = {
+    sourceWalletId: 0,
+    destinationWalletId: 0,
+    amount: 0.0,
+  };
+
+  const [howWhat, setHowWhat] = useState(initialValue);
   const navigate = useNavigate();
   const people = ["Aditi", "Priya", "Vikram", "Sara"];
-
-  //   const onValueChange = (e) => {
-  //   setLoginData({ ...loginData, [e.target.name]: e.target.value });
-  // };
+  const [wallet, setWallet] = useState({});
+  console.log(wallet);
+  const id = wallet?.id?.toString();
+  console.log(id);
 
   const onValueChange = (e) => {
-    setSearch(e.target.value);
+    setHowWhat({ ...howWhat, [e.target.name]: e.target.value });
   };
 
-  const searchUser = async () => {
-    console.log(search);
+  useEffect(() => {
+    const createWallet = async () => {
+      const response = await API.createWallet({ userId: account.userId });
+      if (response?.isSuccess) {
+        setWallet(response.data);
+      }
+    };
+    createWallet();
+  }, []);
 
-    // let response = await API.userLogin(loginData);
-    // if (response?.isSuccess) {
-    //   sessionStorage.setItem(
-    //     "accessToken",
-    //     `Bearer ${response.data.accessToken}`
-    //   );
-    //   sessionStorage.setItem(
-    //     "refreshToken",
-    //     `Bearer ${response.data.refreshToken}`
-    //   );
-    //   setAccount({
-    //     name: response.data.name,
-    //   });
-    //   setLoginData(initialState);
-    //   setIsAuthenticated(true);
-    //   toast(response.data.message);
-    //   navigate("/");
-    // } else {
-    //   toast("Invalid credentials. Try again!");
-    // }
-  };
+  // const searchAndTransfer = async () => {
+  //   console.log(howWhat, "howWhat");
+  //   let response = await API.transferMoney(howWhat);
+  //   if (response?.isSuccess) {
+  //     console.log(response);
+  //   } else {
+  //     console.log("Error sending money");
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-slate-200">
@@ -53,13 +57,22 @@ function Wallet() {
               onValueChange(e);
             }}
             type="text"
-            name="username"
-            placeholder="Search for a person..."
+            name="destinationWalletId"
+            placeholder="Search for a person by wallet id"
+            className="flex-1 lg:p-3 p-2 rounded-xl border border-black focus:outline-none focus:ring-2 focus:ring-violet-500"
+          />
+          <input
+            onChange={(e) => {
+              onValueChange(e);
+            }}
+            type="number"
+            name="amount"
+            placeholder="Enter amount to send"
             className="flex-1 lg:p-3 p-2 rounded-xl border border-black focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
           <button
             onClick={() => {
-              searchUser();
+              searchAndTransfer();
             }}
             className="bg-blue-800 text-white px-5 lg:py-3 py-2 rounded-xl hover:bg-blue-700"
           >
@@ -68,14 +81,13 @@ function Wallet() {
         </div>
 
         {/* People List */}
-        <div className="flex flex-col gap-5">
+        {/* <div className="flex flex-col gap-5">
           {people.map((name, i) => (
             <div
               key={i}
               onClick={() => navigate(`/wallet/${name}`)}
               className="flex items-center justify-between bg-slate-100 p-5 rounded-xl shadow-md hover:shadow-lg transition w-full cursor-pointer"
             >
-              {/* Left part - avatar and name */}
               <div className="flex items-center gap-4">
                 <img
                   src={`https://api.dicebear.com/9.x/avataaars/svg?seed=${name}`}
@@ -85,13 +97,12 @@ function Wallet() {
                 <h3 className="text-lg font-medium text-gray-800">{name}</h3>
               </div>
 
-              {/* Right part - send button */}
               <button className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-500">
                 Send
               </button>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

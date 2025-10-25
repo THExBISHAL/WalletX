@@ -27,4 +27,6 @@ export const SERVICE_URLS = {
   userLogin: { url: "/public/login", method: "POST" },
   createWallet: { url: "/wallets", method: "POST" },
   addMoney: { url: "/wallets/credit", method: "POST" },
+  getBalance: { url: "/wallets/balance", method: "GET" },
+  transferMoney: { url: "/transactions/transfer", method: "POST" },
 };
