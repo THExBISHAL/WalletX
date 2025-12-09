@@ -103,13 +103,6 @@ function SignUp() {
                     placeholder="Enter your password"
                     className="px-4 py-2 rounded bg-violet-950 text-white mb-2"
                   />
-                  <label className="flex items-center text-violet-950 text-xs mb-4">
-                    <input type="checkbox" className="w-3 h-3 mr-2" />I agree to
-                    the{" "}
-                    <a href="#" className="underline text-white ml-1">
-                      Terms & Conditions
-                    </a>
-                  </label>
                 </form>
                 <div className="flex justify-center items-center">
                   <button

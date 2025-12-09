@@ -15,10 +15,10 @@ function Wallet() {
   const [howWhat, setHowWhat] = useState(initialValue);
   const navigate = useNavigate();
   const people = ["Aditi", "Priya", "Vikram", "Sara"];
-  const [wallet, setWallet] = useState({});
-  console.log(wallet);
-  const id = wallet?.id?.toString();
-  console.log(id);
+  const [wallet, setWallet] = useState(null);
+  // console.log(wallet);
+  // const id = wallet?.id?.toString();
+  // console.log(id);
 
   const onValueChange = (e) => {
     setHowWhat({ ...howWhat, [e.target.name]: e.target.value });

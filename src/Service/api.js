@@ -1,19 +1,157 @@
+// import axios from "axios";
+// import { getAccessToken, getType } from "@/utils/common-util";
+// import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from "@/constants/config";
+
+// const API_URL = "http://localhost:8080/";
+
+// const axiosInstance = axios.create({
+//   baseURL: API_URL,
+//   timeout: 10000,
+// });
+
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     if (config.TYPE.params) {
+//       config.params = config.TYPE.params;
+//     } else if (config.TYPE.query) {
+//       config.url = config.url + "/" + config.TYPE.query;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// axiosInstance.interceptors.response.use(
+//   (response) => {
+//     // i can stop loader here if needed
+//     return processResponse(response);
+//   },
+//   (error) => {
+//     // i can stop loader here if needed
+//     return Promise.reject(processError(error));
+//   }
+// );
+
+// const processResponse = (response) => {
+//   if (response?.status === 200 || response?.status === 201) {
+//     return { isSuccess: true, data: response.data };
+//   } else {
+//     return {
+//       isFailure: true,
+//       status: response?.status,
+//       message: response?.data?.message,
+//       code: response?.data?.code,
+//     };
+//   }
+// };
+
+// const processError = (error) => {
+//   if (error?.response) {
+//     return {
+//       isError: true,
+//       message: API_NOTIFICATION_MESSAGES.responseFailure.message,
+//       code: error?.response?.status,
+//     };
+//   } else if (error.request) {
+//     return {
+//       isError: true,
+//       message: API_NOTIFICATION_MESSAGES.requestFailure.message,
+//       code: "",
+//     };
+//   } else {
+//     return {
+//       isError: true,
+//       message: API_NOTIFICATION_MESSAGES.networkError.message,
+//       code: "",
+//     };
+//   }
+// };
+
+// const API = {};
+
+// for (const [key, value] of Object.entries(SERVICE_URLS)) {
+//   API[key] = (body, showUploadProgress, showDownloadProgress, customUrl) => {
+//     const isFormData = body instanceof FormData;
+//     const header = {
+//       Authorization: getAccessToken(),
+//       ...(isFormData ? {} : { "Content-Type": "application/json" }),
+//     };
+
+//     return axiosInstance({
+//       method: value.method,
+//       url: customUrl || value.url,
+//       data: value.method === "DELETE" ? {} : body,
+//       responseType: value.responseType,
+//       headers: header,
+//       TYPE: getType(value, body),
+//       onUploadProgress: (progressEvent) => {
+//         if (showUploadProgress) {
+//           let percentCompleted = Math.round(
+//             (progressEvent.loaded * 100) / progressEvent.total
+//           );
+//           showUploadProgress(percentCompleted);
+//         }
+//       },
+//       onDownloadProgress: (progressEvent) => {
+//         if (showDownloadProgress) {
+//           let percentCompleted = Math.round(
+//             (progressEvent.loaded * 100) / progressEvent.total
+//           );
+//           showDownloadProgress(percentCompleted);
+//         }
+//       },
+//     });
+//   };
+// }
+
+// export { API };
+
+////////////////////////////////////////////////
+
 import axios from "axios";
+import JSONbig from "json-bigint";
 import { getAccessToken, getType } from "@/utils/common-util";
 import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from "@/constants/config";
 
 const API_URL = "http://localhost:8080/";
 
+const jsonBigParser = JSONbig({ storeAsString: true });
+
 const axiosInstance = axios.create({
   baseURL: API_URL,
   timeout: 10000,
+  transformResponse: [
+    function (data, headers) {
+      if (!data) return data;
+
+      if (typeof data !== "string") return data;
+
+      const contentType =
+        headers?.["content-type"] || headers?.["Content-Type"];
+      if (contentType && !contentType.includes("application/json")) {
+        return data;
+      }
+
+      try {
+        return jsonBigParser.parse(data);
+      } catch (e) {
+        try {
+          return JSON.parse(data);
+        } catch (err) {
+          return data;
+        }
+      }
+    },
+  ],
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    if (config.TYPE.params) {
+    if (config.TYPE?.params) {
       config.params = config.TYPE.params;
-    } else if (config.TYPE.query) {
+    } else if (config.TYPE?.query) {
       config.url = config.url + "/" + config.TYPE.query;
     }
     return config;
@@ -25,11 +163,11 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    // i can stop loader here if needed
+    // stop loader here if needed
     return processResponse(response);
   },
   (error) => {
-    // i can stop loader here if needed
+    // stop loader here if needed
     return Promise.reject(processError(error));
   }
 );
@@ -87,16 +225,16 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
       headers: header,
       TYPE: getType(value, body),
       onUploadProgress: (progressEvent) => {
-        if (showUploadProgress) {
-          let percentCompleted = Math.round(
+        if (showUploadProgress && progressEvent.total) {
+          const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
           showUploadProgress(percentCompleted);
         }
       },
       onDownloadProgress: (progressEvent) => {
-        if (showDownloadProgress) {
-          let percentCompleted = Math.round(
+        if (showDownloadProgress && progressEvent.total) {
+          const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
           showDownloadProgress(percentCompleted);

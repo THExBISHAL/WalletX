@@ -16,10 +16,13 @@ import {
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useContext, useEffect, useState } from "react";
 import { DataContext } from "@/context/DataProvider";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { API } from "@/Service/api";
 
 function Navbar() {
+  const { setAccount } = useContext(DataContext);
+  const navigate = useNavigate();
+
   const initialValue = {
     balance: "",
     id: "",
@@ -33,6 +36,12 @@ function Navbar() {
     { name: "Transactions", path: "/history" },
     { name: "About Us", path: "/aboutus" },
   ];
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setAccount("");
+    navigate("/login");
+  };
 
   return (
     <div className="flex justify-between items-center px-8 py-4 bg-blue-950 text-gray-200 shadow-lg">
@@ -64,12 +73,12 @@ function Navbar() {
               className="w-10 h-10 rounded-full cursor-pointer"
             />
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-blue-900 w-40 h-35 text-gray-100 border border-black flex flex-col justify-around items-center">
+          <DropdownMenuContent className="bg-blue-900 w-40 h-25 text-gray-100 border border-black flex flex-col justify-around items-center">
             <DropdownMenuLabel>{"THExBISHAL"}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <div className="flex flex-col justify-between gap-3 pb-2 font-medium">
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Log Out</DropdownMenuItem>
+              {/* <DropdownMenuItem>Profile</DropdownMenuItem> */}
+              <DropdownMenuItem onClick={logout}>Log Out</DropdownMenuItem>
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -112,7 +121,7 @@ function Navbar() {
                     {item.name}
                   </NavLink>
                 ))}
-                <p className="mt-8 text-gray-300 hover:text-white cursor-pointer">
+                <p className="mt-4 text-gray-300 hover:text-white cursor-pointer">
                   Log Out
                 </p>
               </div>

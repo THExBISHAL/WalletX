@@ -56,6 +56,8 @@ function Top() {
         null,
         addMoneyURL
       );
+      console.log(response.data);
+
       if (response?.isSuccess) {
         setBalance((prev) => prev + add);
       } else {
@@ -135,7 +137,7 @@ function Top() {
                     <Button
                       variant="outline"
                       onClick={async () => {
-                        await addMoney(); // call your function
+                        await addMoney();
                         setIsDialogOpen(false); // manually close dialog
                       }}
                     >
@@ -150,10 +152,10 @@ function Top() {
         <div className="text-right flex flex-col justify-start">
           <h3 className="font-bold text-xl  text-gray-800">Today</h3>
           <p className="text-gray-600 font-medium pt-5">
-            Deposit: <span className="font-bold text-green-600">$3,256.29</span>
+            Deposit: <span className="font-bold text-green-600">₹3,256.29</span>
           </p>
           <p className="font-medium text-gray-600 pt-2">
-            Expense: <span className="font-bold text-red-500">$1,538.25</span>
+            Expense: <span className="font-bold text-red-500">₹1,538.25</span>
           </p>
         </div>
       </div>

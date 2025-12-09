@@ -13,24 +13,21 @@ import { Link } from "react-router-dom";
 function Bottom() {
   const transactions = [
     {
-      title: "Fashion",
+      title: "Partha",
       type: "expense",
       amount: "-15.00",
-      category: "Clothes",
     },
-    { title: "Food", type: "expense", amount: "-8.00", category: "Food" },
     {
-      title: "Business",
+      title: "Pritam",
       type: "income",
       amount: "+249.69",
-      category: "Transfer",
     },
 
+    { title: "Asmit", type: "expense", amount: "-8.00" },
     {
-      title: "Pharmacy",
+      title: "Bishal",
       type: "expense",
       amount: "-38.50",
-      category: "Card Payment",
     },
   ];
 
@@ -57,7 +54,7 @@ function Bottom() {
                 <ArrowDown size={18} />
                 <div>
                   <p className="text-lg font-semibold">
-                    {income.toLocaleString()} $
+                    ₹{income.toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-500">Income</p>
                 </div>
@@ -67,7 +64,7 @@ function Bottom() {
                 <ArrowUp size={18} />
                 <div>
                   <p className="text-lg font-semibold">
-                    {expense.toLocaleString()} $
+                    ₹{expense.toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-500">Expense</p>
                 </div>
@@ -113,7 +110,7 @@ function Bottom() {
                   <p className="text-sm font-medium text-gray-800">
                     Total Cashflow
                   </p>
-                  <p className="text-xl font-bold">${total.toLocaleString()}</p>
+                  <p className="text-xl font-bold">₹{total.toLocaleString()}</p>
                 </div>
               </div>
             </div>
@@ -139,7 +136,7 @@ function Bottom() {
                   t.type === "income" ? "text-green-500" : "text-red-500"
                 }`}
               >
-                {t.amount}$
+                ₹{t.amount}
               </span>
             </li>
           ))}
