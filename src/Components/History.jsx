@@ -1,57 +1,18 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
+const transactions = [
+  // {
+  //   toWalletId: "Pritam",
+  //   amount: "₹300.00",
+  //   describtion: "Payment for services",
+  // },
 ];
 
 function History() {
@@ -60,24 +21,22 @@ function History() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] font-bold">Invoice</TableHead>
-            <TableHead className="text-center font-bold">Status</TableHead>
-            <TableHead className="text-center font-bold">Method</TableHead>
+            <TableHead className="text-left font-bold">To</TableHead>
             <TableHead className="text-right font-bold">Amount</TableHead>
+            <TableHead className="text-right font-bold">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="text-left">{invoice.invoice}</TableCell>
-              <TableCell className="text-center">
-                {invoice.paymentStatus}
-              </TableCell>
-              <TableCell className="text-center">
-                {invoice.paymentMethod}
+          {transactions.map((transactions) => (
+            <TableRow key={transactions.toWalletId}>
+              <TableCell className="text-left">
+                {transactions.toWalletId}
               </TableCell>
               <TableCell className="text-right">
-                {invoice.totalAmount}
+                {transactions.amount}
+              </TableCell>
+              <TableCell className="text-right">
+                {transactions.describtion}
               </TableCell>
             </TableRow>
           ))}
