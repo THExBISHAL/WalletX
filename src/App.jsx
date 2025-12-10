@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import DataProvider from "./context/DataProvider";
@@ -26,7 +26,23 @@ const PrivateRoute = ({ isAuthenticated }) => {
 };
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState(() => {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user) : {};
+  });
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const user = localStorage.getItem("user");
+    return user ? JSON.parse(user).isLogged || false : false;
+  });
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      setIsAuthenticated(parsedUser.isLogged || false);
+      setUserData(parsedUser);
+    }
+  }, []);
 
   return (
     <DataProvider>
@@ -36,38 +52,74 @@ function App() {
         <Route path="/register" element={<SignUP />} />
         <Route
           path="/login"
-          element={<Login setIsAuthenticated={setIsAuthenticated} />}
+          element={
+            <Login
+              setIsAuthenticated={setIsAuthenticated}
+              setUserData={setUserData}
+            />
+          }
         />
 
         <Route
           path="/"
-          element={<PrivateRoute isAuthenticated={isAuthenticated} />}
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              userData={userData}
+            />
+          }
         >
-          <Route index element={<DashBoard />} />
+          <Route index="true" element={<DashBoard userData={userData} isAuthenticated={isAuthenticated} />} />
         </Route>
         <Route
           path="/history"
-          element={<PrivateRoute isAuthenticated={isAuthenticated} />}
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              userData={userData}
+            />
+          }
         >
-          <Route path="/history" element={<Transactions />} />
+          <Route
+            path="/history"
+            element={<Transactions userData={userData} />}
+          />
         </Route>
         <Route
           path="/wallet"
-          element={<PrivateRoute isAuthenticated={isAuthenticated} />}
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              userData={userData}
+            />
+          }
         >
-          <Route path="/wallet" element={<Wallet />} />
+          <Route path="/wallet" element={<Wallet userData={userData} />} />
         </Route>
         <Route
           path="/wallet/:name"
-          element={<PrivateRoute isAuthenticated={isAuthenticated} />}
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              userData={userData}
+            />
+          }
         >
-          <Route path="/wallet/:name" element={<SendMoney />} />
+          <Route
+            path="/wallet/:name"
+            element={<SendMoney userData={userData} />}
+          />
         </Route>
         <Route
           path="/aboutus"
-          element={<PrivateRoute isAuthenticated={isAuthenticated} />}
+          element={
+            <PrivateRoute
+              isAuthenticated={isAuthenticated}
+              userData={userData}
+            />
+          }
         >
-          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/aboutus" element={<AboutUs userData={userData} />} />
         </Route>
       </Routes>
     </DataProvider>

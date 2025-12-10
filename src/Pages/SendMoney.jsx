@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Navbar from "@/Components/Navbar";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -15,7 +16,7 @@ import { Label } from "@/Components/ui/label";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 
-function SendMoney() {
+function SendMoney({ userData }) {
   const { name } = useParams();
   const [amount, setAmount] = useState("");
   const [transactions, setTransactions] = useState([
@@ -78,7 +79,7 @@ function SendMoney() {
   return (
     <div className="min-h-screen bg-violet-50 flex flex-col">
       {/* Navbar */}
-      <Navbar />
+      <Navbar userData={userData} />
 
       {/* Top Header */}
       <div className="bg-gray-500 text-white p-4 flex items-center shadow-md sticky top-0 z-10">

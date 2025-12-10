@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { API } from "@/Service/api";
 import { DataContext } from "@/context/DataProvider";
 
-function Top() {
+function Top({ userData, isAuthenticated }) {
   const initialValue = {
     balance: "",
     id: "",
@@ -30,10 +30,11 @@ function Top() {
 
   const addMoneyURL = `/wallets/${account.userId}/credit`;
   const maskWalletId = (id) => {
-    if (!id) return "";
-    const strId = id.toString();
-    const masked = "*".repeat(strId.length - 5) + strId.slice(-5);
-    return masked.replace(/(.{7})/g, "$1 ");
+    // if (!id) return "";
+    // const strId = id.toString();
+    // const masked = "*".repeat(strId.length - 5) + strId.slice(-5);
+    // return masked.replace(/(.{7})/g, "$1 ");
+    return id;
   };
 
   useEffect(() => {
@@ -45,6 +46,16 @@ function Top() {
         setIsDialogOpen(false);
       }
     };
+    // const getWallet = async () => {
+
+    //   const response = await API.getBalance({ userId: account.userId });
+    //   if (response?.isSuccess) {
+    //     setWallet(response.data);
+    //     setBalance(response.data.balance);
+    //     setIsDialogOpen(false);
+    //   }
+    // };
+    // isAuthenticated ? getWallet() :
     createWallet();
   }, []);
 
@@ -69,18 +80,18 @@ function Top() {
   };
 
   //Fetch News
-  useEffect(() => {
-    fetch(
-      "https://api.marketaux.com/v1/news/all?symbols=TSLA,AMZN,MSFT&filter_entities=true&language=en&api_token=CbjKrsPKDISKrngXHVHBulJWl3JgERlLeqEbdIml"
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        setData(json);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(
+  //     "https://api.marketaux.com/v1/news/all?symbols=TSLA,AMZN,MSFT&filter_entities=true&language=en&api_token=CbjKrsPKDISKrngXHVHBulJWl3JgERlLeqEbdIml"
+  //   )
+  //     .then((res) => res.json())
+  //     .then((json) => {
+  //       setData(json);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error:", err);
+  //     });
+  // }, []);
 
   return (
     <div className="grid md:grid-cols-3 gap-6">

@@ -4,7 +4,7 @@ import { API } from "@/Service/api";
 import { DataContext } from "@/context/DataProvider";
 import { toast } from "sonner";
 
-function Login({ setIsAuthenticated }) {
+function Login({ setIsAuthenticated, setUserData }) {
   const initialState = {
     name: "",
     password: "",
@@ -21,12 +21,21 @@ function Login({ setIsAuthenticated }) {
     let response = await API.userLogin(loginData);
 
     if (response?.isSuccess) {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          username: response.data.username,
+          userId: response.data.userid,
+          isLogged: true,
+        })
+      );
       sessionStorage.setItem("accessToken", `Bearer ${response.data.token}`);
       setAccount({
         userId: response.data.userid,
       });
       setIsAuthenticated(true);
       toast(response.data.message);
+      setUserData(response.data);
       navigate("/");
     } else {
       toast("Invalid credentials. Try again!");
