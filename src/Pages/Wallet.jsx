@@ -3,18 +3,15 @@ import { DataContext } from "@/context/DataProvider";
 import { API } from "@/Service/api";
 import { useContext, useEffect, useState } from "react";
 
-function Wallet() {
+//TransferRequestDTO(fromWalletId=null, toWalletId=null, amount=365, description=hello)
+function Wallet({ userData }) {
   const { account } = useContext(DataContext);
-  const initialValue = {
-    sourceWalletId: 0,
-    destinationWalletId: 0,
-    amount: 0.0,
-  };
-  const [walletInfo, setWalletInfo] = useState(initialValue);
+  
+  const [walletInfo, setWalletInfo] = useState({});
 
-  const onValueChange = (e) => {
-    setWalletInfo({ ...walletInfo, [e.target.name]: e.target.value });
-  };
+  // const onValueChange = (e) => {
+  //   setWalletInfo({ ...walletInfo, [e.target.name]: e.target.value });
+  // };
 
   useEffect(() => {
     const createWallet = async () => {
@@ -22,7 +19,7 @@ function Wallet() {
       if (response?.isSuccess) {
         setWalletInfo((prev) => ({
           ...prev,
-          sourceWalletId: response.data.id,
+          fromWalletId: response.data.id,
         }));
       }
     };
@@ -30,56 +27,54 @@ function Wallet() {
   }, []);
 
   const searchAndTransfer = async () => {
-    console.log(typeof walletInfo.sourceWalletId, "walletInfo");
+    console.log(walletInfo);
     let response = await API.transferMoney(walletInfo);
-    //console.log(response);
+    console.log(response);
 
-    if (response?.isSuccess) {
-      console.log(response);
-    } else {
-      console.log("Error sending money");
-    }
+    // if (response?.isSuccess) {
+    //   console.log(response);
+    // } else {
+    //   console.log("Error sending money");
+    // }
   };
 
   return (
     <div className="min-h-screen bg-slate-200">
-      <Navbar />
+      <Navbar userData={userData} />
 
       {/* Main Container */}
       <div className="lg:mx-20 mx-5 lg:mt-5 mt-3">
         {/* Search Bar */}
         <div className="flex flex-col md:flex-row items-center gap-3 mb-6">
           <input
-            onChange={(e) => {
-              onValueChange(e);
-            }}
+            onChange={(e) =>
+              setWalletInfo({ ...walletInfo, [e.target.name]: e.target.value })
+            }
             type="text"
-            name="destinationWalletId"
-            placeholder="Search for a person by wallet id"
+            name="toWalletId"
+            placeholder="Enter wallet id"
             className="flex-1 lg:p-3 p-2 rounded-xl border border-black focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
           <input
-            onChange={(e) => {
-              onValueChange(e);
-            }}
+            onChange={(e) =>
+              setWalletInfo({ ...walletInfo, [e.target.name]: e.target.value })
+            }
             type="number"
             name="amount"
             placeholder="Enter amount to send"
             className="flex-1 lg:p-3 p-2 rounded-xl border border-black focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
           <input
-            onChange={(e) => {
-              onValueChange(e);
-            }}
+            onChange={(e) =>
+              setWalletInfo({ ...walletInfo, [e.target.name]: e.target.value })
+            }
             type="text"
-            name="describtion"
+            name="description"
             placeholder="Add description"
             className="flex-1 lg:p-3 p-2 rounded-xl border border-black focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
           <button
-            onClick={() => {
-              searchAndTransfer();
-            }}
+            onClick={() => searchAndTransfer()}
             className="bg-blue-800 text-white px-5 lg:py-3 py-2 rounded-xl hover:bg-blue-700"
           >
             Send

@@ -3,7 +3,7 @@ import { API } from "@/Service/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-function SignUp() {
+function SignUp({userData}) {
   const initialSignupState = {
     name: "",
     email: "",

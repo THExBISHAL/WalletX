@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Sheet,
   SheetContent,
@@ -19,7 +20,7 @@ import { DataContext } from "@/context/DataProvider";
 import { NavLink, useNavigate } from "react-router-dom";
 import { API } from "@/Service/api";
 
-function Navbar() {
+function Navbar( {userData} ) {
   const { setAccount } = useContext(DataContext);
   const navigate = useNavigate();
 
@@ -38,7 +39,7 @@ function Navbar() {
   ];
 
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setAccount("");
     navigate("/login");
   };
@@ -74,7 +75,7 @@ function Navbar() {
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-blue-900 w-40 h-25 text-gray-100 border border-black flex flex-col justify-around items-center">
-            <DropdownMenuLabel>{"THExBISHAL"}</DropdownMenuLabel>
+            <DropdownMenuLabel>{userData.username}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <div className="flex flex-col justify-between gap-3 pb-2 font-medium">
               {/* <DropdownMenuItem>Profile</DropdownMenuItem> */}
@@ -82,7 +83,7 @@ function Navbar() {
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
-        <span className="font-mono">{"THExBISHAL"}</span>
+        <span className="font-mono">{userData.username}</span>
       </div>
 
       {/* -------- Mobile Menu -------- */}
@@ -100,7 +101,7 @@ function Navbar() {
                     className="w-10 h-10 rounded-full"
                   />
                   <span className="text-gray-100 font-medium">
-                    {"THExBISHAL"}
+                   {userData.username}
                   </span>
                 </div>
               </SheetTitle>
@@ -121,7 +122,7 @@ function Navbar() {
                     {item.name}
                   </NavLink>
                 ))}
-                <p className="mt-4 text-gray-300 hover:text-white cursor-pointer">
+                <p className="mt-4 text-gray-300 hover:text-white cursor-pointer" onClick={() => logout()}>
                   Log Out
                 </p>
               </div>

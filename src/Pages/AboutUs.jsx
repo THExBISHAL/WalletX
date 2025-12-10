@@ -28,7 +28,7 @@ const members = [
   },
 ];
 
-function AboutUs() {
+function AboutUs({userData}) {
   const [visibleIndex, setVisibleIndex] = useState(0);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ function AboutUs() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-slate-900 text-white">
-      <Navbar />
+      <Navbar userData={userData}/>
 
       <div className="flex flex-col items-center py-20">
         {members.map((member, index) => {
