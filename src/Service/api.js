@@ -207,6 +207,23 @@ const processError = (error) => {
   }
 };
 
+// helper to replace :placeholders in URLs using values from an object (e.g. body)
+function fillUrlTemplate(url, source = {}) {
+  if (!url || !url.includes(":")) return url;
+  let filled = url;
+  Object.keys(source || {}).forEach((k) => {
+    const token = `:${k}`;
+    if (
+      filled.includes(token) &&
+      source[k] !== undefined &&
+      source[k] !== null
+    ) {
+      filled = filled.replaceAll(token, encodeURIComponent(source[k]));
+    }
+  });
+  return filled;
+}
+
 const API = {};
 
 for (const [key, value] of Object.entries(SERVICE_URLS)) {
@@ -219,7 +236,7 @@ for (const [key, value] of Object.entries(SERVICE_URLS)) {
 
     return axiosInstance({
       method: value.method,
-      url:value.url,
+      url: customUrl || fillUrlTemplate(value.url, body),
       data: value.method === "DELETE" ? {} : body,
       responseType: value.responseType,
       headers: header,

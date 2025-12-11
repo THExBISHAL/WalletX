@@ -26,7 +26,7 @@ export const SERVICE_URLS = {
   userSignup: { url: "/public/register", method: "POST" },
   userLogin: { url: "/public/login", method: "POST" },
   createWallet: { url: "/wallets", method: "POST" },
-  addMoney: { url: "/wallets/credit", method: "POST" },
+  addMoney: { url: "/wallets/:userId/credit", method: "POST", query: true },
   getBalance: { url: "/wallets/users/:userId", method: "GET", query: true },
   transferMoney: { url: "/transactions", method: "POST" },
   userLogout: { url: "/public/logout", method: "POST" },

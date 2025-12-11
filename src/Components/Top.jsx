@@ -60,6 +60,8 @@ function Top({ userData, isAuthenticated }) {
   }, []);
 
   const addMoney = async (e) => {
+    //console.log(add, " = add>>>>>>>>", addMoneyURL, " = addmoneyURL");
+
     try {
       const response = await API.addMoney(
         { amount: add },
@@ -149,7 +151,7 @@ function Top({ userData, isAuthenticated }) {
                       variant="outline"
                       onClick={async () => {
                         await addMoney();
-                        setIsDialogOpen(false); // manually close dialog
+                        setIsDialogOpen(false);
                       }}
                     >
                       Add

@@ -3,15 +3,10 @@ import { DataContext } from "@/context/DataProvider";
 import { API } from "@/Service/api";
 import { useContext, useEffect, useState } from "react";
 
-//TransferRequestDTO(fromWalletId=null, toWalletId=null, amount=365, description=hello)
 function Wallet({ userData }) {
   const { account } = useContext(DataContext);
-  
-  const [walletInfo, setWalletInfo] = useState({});
 
-  // const onValueChange = (e) => {
-  //   setWalletInfo({ ...walletInfo, [e.target.name]: e.target.value });
-  // };
+  const [walletInfo, setWalletInfo] = useState({});
 
   useEffect(() => {
     const createWallet = async () => {
